@@ -41,6 +41,38 @@ const FacebookIcon = () => (
   </svg>
 );
 
+// Mobile Nav Icons
+const HomeIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+  </svg>
+);
+
+const VideoIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <polygon points="23 7 16 12 23 17 23 7"></polygon>
+    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+  </svg>
+);
+
+const DocumentIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+    <polyline points="14 2 14 8 20 8"></polyline>
+    <line x1="16" y1="13" x2="8" y2="13"></line>
+    <line x1="16" y1="17" x2="8" y2="17"></line>
+    <polyline points="10 9 9 9 8 9"></polyline>
+  </svg>
+);
+
+const MailIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+    <polyline points="22,6 12,13 2,6"></polyline>
+  </svg>
+);
+
 const AboutJesus = ({ setCurrentPage }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -66,6 +98,12 @@ const AboutJesus = ({ setCurrentPage }) => {
     // Initial check
     handleResize();
 
+    // Fix body margins
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    document.documentElement.style.margin = '0';
+    document.documentElement.style.padding = '0';
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleResize);
@@ -73,11 +111,11 @@ const AboutJesus = ({ setCurrentPage }) => {
   }, []);
 
   const navItems = [
-    { name: 'Home', href: '#home', onClick: () => setCurrentPage('home') },
-    { name: 'About Jesus', href: '#about-jesus', active: true },
-    { name: 'Sermons', href: '#sermons', onClick: () => setCurrentPage('sermons') },
-    { name: 'Newsletter', href: '#newsletter', onClick: () => setCurrentPage('newsletter') },
-    { name: 'Contact', href: '#contact', onClick: () => setCurrentPage('contact') }
+    { name: 'Home', href: '#home', onClick: () => setCurrentPage('home'), icon: <HomeIcon /> },
+    { name: 'About Jesus', href: '#about-jesus', active: true, icon: <CrossIcon /> },
+    { name: 'Sermons', href: '#sermons', onClick: () => setCurrentPage('sermons'), icon: <VideoIcon /> },
+    { name: 'Newsletter', href: '#newsletter', onClick: () => setCurrentPage('newsletter'), icon: <DocumentIcon /> },
+    { name: 'Contact', href: '#contact', onClick: () => setCurrentPage('contact'), icon: <MailIcon /> }
   ];
 
   const features = [
@@ -124,7 +162,8 @@ const AboutJesus = ({ setCurrentPage }) => {
       lineHeight: 1.6,
       color: '#1a1a1a',
       backgroundColor: '#ffffff',
-      overflowX: 'hidden'
+      overflowX: 'hidden',
+      width: '100%'
     },
 
     navbar: {
@@ -183,11 +222,10 @@ const AboutJesus = ({ setCurrentPage }) => {
         height: '100vh',
         width: '90%',
         maxWidth: '350px',
-        background: 'rgba(255, 255, 255, 0.98)',
-        backdropFilter: 'blur(20px)',
+        background: '#2474CE',
         flexDirection: 'column',
         justifyContent: 'flex-start',
-        alignItems: 'flex-start',
+        alignItems: 'center',
         padding: '6rem 2rem 2rem',
         boxShadow: '-10px 0 40px rgba(0, 0, 0, 0.1)',
         transition: 'right 0.4s ease'
@@ -196,7 +234,7 @@ const AboutJesus = ({ setCurrentPage }) => {
 
     navLink: {
       textDecoration: 'none',
-      color: isMobile ? '#1a1a1a' : 'rgba(255, 255, 255, 0.9)',
+      color: isMobile ? 'white' : 'rgba(255, 255, 255, 0.9)',
       fontWeight: 600,
       fontSize: isMobile ? '1.2rem' : '1rem',
       transition: 'all 0.3s ease',
@@ -204,12 +242,16 @@ const AboutJesus = ({ setCurrentPage }) => {
       padding: isMobile ? '1rem 0' : '0.5rem 0',
       ...(isMobile && {
         width: '100%',
-        borderBottom: '1px solid rgba(0, 0, 0, 0.1)'
+        borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '12px'
       })
     },
 
     navLinkActive: {
-      color: isMobile ? '#2474CE' : 'white'
+      color: 'white'
     },
 
     mobileMenuToggle: {
@@ -294,7 +336,12 @@ const AboutJesus = ({ setCurrentPage }) => {
       gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))',
       gap: isMobile ? '2rem' : '3rem',
       maxWidth: '1200px',
-      margin: '0 auto'
+      margin: '0 auto',
+      ...(isMobile && {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+      })
     },
 
     featureCard: {
@@ -304,7 +351,11 @@ const AboutJesus = ({ setCurrentPage }) => {
       borderRadius: '25px',
       boxShadow: '0 15px 50px rgba(0, 0, 0, 0.08)',
       transition: 'all 0.4s ease',
-      border: '1px solid rgba(36, 116, 206, 0.08)'
+      border: '1px solid rgba(36, 116, 206, 0.08)',
+      ...(isMobile && {
+        maxWidth: '400px',
+        width: '100%'
+      })
     },
 
     featureCardHover: {
@@ -459,7 +510,12 @@ const AboutJesus = ({ setCurrentPage }) => {
       maxWidth: '1400px',
       margin: '0 auto',
       position: 'relative',
-      zIndex: 2
+      zIndex: 2,
+      ...(isMobile && {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+      })
     },
 
     verseCard: {
@@ -470,7 +526,11 @@ const AboutJesus = ({ setCurrentPage }) => {
       transition: 'all 0.5s ease',
       textAlign: 'center',
       position: 'relative',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      ...(isMobile && {
+        maxWidth: '400px',
+        width: '100%'
+      })
     },
 
     verseCardHover: {
@@ -625,6 +685,19 @@ const AboutJesus = ({ setCurrentPage }) => {
 
   // Animation styles
   const animationStyles = `
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
     @keyframes fadeInUp {
       from {
         opacity: 0;
@@ -687,7 +760,7 @@ const AboutJesus = ({ setCurrentPage }) => {
 
           <ul style={styles.navLinks}>
             {navItems.map((item, index) => (
-              <li key={index} style={{ margin: 0 }}>
+              <li key={index} style={{ margin: 0, width: isMobile ? '100%' : 'auto' }}>
                 <a 
                   href={item.href} 
                   style={{
@@ -705,6 +778,7 @@ const AboutJesus = ({ setCurrentPage }) => {
                     setIsMenuOpen(false);
                   }}
                 >
+                  {isMobile && item.icon}
                   {item.name}
                   {item.active && !isMobile && (
                     <span style={{

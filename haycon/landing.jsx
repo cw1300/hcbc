@@ -86,6 +86,54 @@ const BookOpenIcon = () => (
   </svg>
 );
 
+const ShoppingBagIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+    <line x1="3" y1="6" x2="21" y2="6"></line>
+    <path d="M16 10a4 4 0 0 1-8 0"></path>
+  </svg>
+);
+
+const BabyIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M9 12h.01"></path>
+    <path d="M15 12h.01"></path>
+    <path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"></path>
+    <path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 0 1 0 3.6 9 9 0 0 1-17.6 0 2 2 0 0 1 0-3.6A9 9 0 0 1 12 3c2 0 3.5 1.1 3.5 2.5s-.9 2.5-2 2.5c-.8 0-1.5-.4-1.5-1"></path>
+  </svg>
+);
+
+// Mobile Nav Icons
+const HomeIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+  </svg>
+);
+
+const CrossIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M12 2v20M4 12h16"></path>
+  </svg>
+);
+
+const VideoIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <polygon points="23 7 16 12 23 17 23 7"></polygon>
+    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+  </svg>
+);
+
+const DocumentIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+    <polyline points="14 2 14 8 20 8"></polyline>
+    <line x1="16" y1="13" x2="8" y2="13"></line>
+    <line x1="16" y1="17" x2="8" y2="17"></line>
+    <polyline points="10 9 9 9 8 9"></polyline>
+  </svg>
+);
+
 const EventModal = ({ event, onClose }) => {
   const [language, setLanguage] = useState('en');
 
@@ -204,6 +252,12 @@ const LandingPage = ({ setCurrentPage }) => {
     // Initial check
     handleResize();
 
+    // Fix body margins
+    document.body.style.margin = '0';
+    document.body.style.padding = '0';
+    document.documentElement.style.margin = '0';
+    document.documentElement.style.padding = '0';
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleResize);
@@ -220,7 +274,8 @@ const LandingPage = ({ setCurrentPage }) => {
       lineHeight: 1.6,
       color: '#1a1a1a',
       backgroundColor: '#ffffff',
-      overflowX: 'hidden'
+      overflowX: 'hidden',
+      width: '100%'
     },
 
     navbar: {
@@ -279,11 +334,10 @@ const LandingPage = ({ setCurrentPage }) => {
         height: '100vh',
         width: '90%',
         maxWidth: '350px',
-        background: 'rgba(255, 255, 255, 0.98)',
-        backdropFilter: 'blur(20px)',
+        background: '#2474CE',
         flexDirection: 'column',
         justifyContent: 'flex-start',
-        alignItems: 'flex-start',
+        alignItems: 'center',
         padding: '6rem 2rem 2rem',
         boxShadow: '-10px 0 40px rgba(0, 0, 0, 0.1)',
         transition: 'right 0.4s ease'
@@ -292,7 +346,7 @@ const LandingPage = ({ setCurrentPage }) => {
 
     navLink: {
       textDecoration: 'none',
-      color: isMobile ? '#1a1a1a' : 'rgba(255, 255, 255, 0.9)',
+      color: isMobile ? 'white' : 'rgba(255, 255, 255, 0.9)',
       fontWeight: 600,
       fontSize: isMobile ? '1.2rem' : '1rem',
       transition: 'all 0.3s ease',
@@ -300,12 +354,16 @@ const LandingPage = ({ setCurrentPage }) => {
       padding: isMobile ? '1rem 0' : '0.5rem 0',
       ...(isMobile && {
         width: '100%',
-        borderBottom: '1px solid rgba(0, 0, 0, 0.1)'
+        borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '12px'
       })
     },
 
     navLinkActive: {
-      color: isMobile ? '#2474CE' : 'white'
+      color: 'white'
     },
 
     mobileMenuToggle: {
@@ -638,13 +696,22 @@ const LandingPage = ({ setCurrentPage }) => {
       gap: isMobile ? '3rem' : '6rem',
       maxWidth: '1400px',
       margin: '0 auto',
-      marginTop: '3rem'
+      marginTop: '3rem',
+      ...(isMobile && {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+      })
     },
 
     contactInfo: {
       display: 'flex',
       flexDirection: 'column',
-      gap: '2.5rem'
+      gap: '2.5rem',
+      ...(isMobile && {
+        width: '100%',
+        maxWidth: '500px'
+      })
     },
 
     contactItem: {
@@ -656,7 +723,10 @@ const LandingPage = ({ setCurrentPage }) => {
       borderRadius: '25px',
       boxShadow: '0 15px 50px rgba(0, 0, 0, 0.08)',
       transition: 'all 0.4s ease',
-      border: '2px solid rgba(36, 116, 206, 0.08)'
+      border: '2px solid rgba(36, 116, 206, 0.08)',
+      ...(isMobile && {
+        width: '100%'
+      })
     },
 
     contactItemHover: {
@@ -681,7 +751,11 @@ const LandingPage = ({ setCurrentPage }) => {
       height: '500px',
       background: 'linear-gradient(135deg, #f8f9fa, #ffffff)',
       position: 'relative',
-      border: '2px solid rgba(36, 116, 206, 0.1)'
+      border: '2px solid rgba(36, 116, 206, 0.1)',
+      ...(isMobile && {
+        width: '100%',
+        maxWidth: '500px'
+      })
     },
 
     footer: {
@@ -739,6 +813,19 @@ const LandingPage = ({ setCurrentPage }) => {
 
   // Animation styles
   const animationStyles = `
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
     @keyframes fadeInUp {
       from {
         opacity: 0;
@@ -786,11 +873,11 @@ const LandingPage = ({ setCurrentPage }) => {
   `;
 
   const navItems = [
-    { name: 'Home', href: '#home', active: true },
-    { name: 'About Jesus', href: '#about-jesus', onClick: () => setCurrentPage('about-jesus') },
-    { name: 'Sermons', href: '#sermons', onClick: () => setCurrentPage('sermons') },
-    { name: 'Newsletter', href: '#newsletter', onClick: () => setCurrentPage('newsletter') },
-    { name: 'Contact', href: '#contact', onClick: () => setCurrentPage('contact') }
+    { name: 'Home', href: '#home', active: true, icon: <HomeIcon /> },
+    { name: 'About Jesus', href: '#about-jesus', onClick: () => setCurrentPage('about-jesus'), icon: <CrossIcon /> },
+    { name: 'Sermons', href: '#sermons', onClick: () => setCurrentPage('sermons'), icon: <VideoIcon /> },
+    { name: 'Newsletter', href: '#newsletter', onClick: () => setCurrentPage('newsletter'), icon: <DocumentIcon /> },
+    { name: 'Contact', href: '#contact', onClick: () => setCurrentPage('contact'), icon: <MailIcon /> }
   ];
 
   const events = [
@@ -805,7 +892,7 @@ const LandingPage = ({ setCurrentPage }) => {
     },
     {
       title: 'Bible Study & Prayer',
-      time: '7:00 PM',
+      time: '',
       date: 'Wednesdays',
       image: 'https://i.postimg.cc/ZRFFRj17/Bible-Study.jpg',
       category: 'Study',
@@ -851,6 +938,24 @@ const LandingPage = ({ setCurrentPage }) => {
         title: '中文团契礼拜',
         details: '我们的中文团契礼拜是一个温暖欢迎的聚会，专为讲普通话的信徒和对中国文化感兴趣的人士而设。礼拜主要以普通话进行，包括传统和当代中国基督教歌曲的敬拜、祷告、圣经教导和团契交流。这个礼拜为讲中文的基督徒提供了一个属灵的家园，也为那些更习惯用母语敬拜的人搭建了桥梁。我们在庆祝文化传统的同时，专注于耶稣基督的普世信息。'
       }
+    },
+    {
+      title: 'Op Shop',
+      time: '9:00 AM - 2:00 PM',
+      date: 'Thursdays & Saturdays',
+      image: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=800&h=600&fit=crop&q=90',
+      category: 'Community',
+      description: 'Quality second-hand goods at great prices while supporting our community outreach programs.',
+      details: 'Our Op Shop is more than just a thrift store - it\'s a ministry that serves our local community by providing affordable clothing, household items, books, and more. All proceeds go towards supporting our church\'s outreach programs and helping those in need. The Op Shop is also a great place to volunteer and meet new people while making a difference in the community. We accept donations during opening hours and are always grateful for quality items.'
+    },
+    {
+      title: 'Kids Space',
+      time: 'During Sunday Service',
+      date: 'Every Sunday',
+      image: 'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=800&h=600&fit=crop&q=90',
+      category: 'Kids Ministry',
+      description: 'Fun, safe, and engaging programs for children to learn about God\'s love.',
+      details: 'Kids Space is our vibrant children\'s ministry designed for ages 3-12. Every Sunday, while adults are in the main service, children enjoy age-appropriate Bible lessons, interactive games, crafts, and worship songs designed just for them. Our trained and background-checked volunteers create a safe, fun environment where kids can learn about Jesus, make friends, and grow in their faith. We have separate programs for preschoolers and primary school children to ensure content is perfectly suited to their developmental stage.'
     }
   ];
 
@@ -884,7 +989,7 @@ const LandingPage = ({ setCurrentPage }) => {
           </a>
           <ul style={styles.navLinks}>
             {navItems.map((item, index) => (
-              <li key={index} style={{ margin: 0 }}>
+              <li key={index} style={{ margin: 0, width: isMobile ? '100%' : 'auto' }}>
                 <a 
                   href={item.href} 
                   style={{
@@ -902,6 +1007,7 @@ const LandingPage = ({ setCurrentPage }) => {
                     setIsMenuOpen(false);
                   }}
                 >
+                  {isMobile && item.icon}
                   {item.name}
                   {item.active && !isMobile && (
                     <span style={{
