@@ -182,14 +182,608 @@ const LandingPage = ({ setCurrentPage }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [hoveredCard, setHoveredCard] = useState(null);
+  const [hoveredFeature, setHoveredFeature] = useState(null);
+  const [hoveredNavLink, setHoveredNavLink] = useState(null);
+  const [hoveredButton, setHoveredButton] = useState(null);
+  const [hoveredSocialLink, setHoveredSocialLink] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleResize);
+
+    // Initial check
+    handleResize();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
+
+  // Inline styles
+  const styles = {
+    globalContainer: {
+      margin: 0,
+      padding: 0,
+      boxSizing: 'border-box',
+      fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      lineHeight: 1.6,
+      color: '#1a1a1a',
+      backgroundColor: '#ffffff',
+      overflowX: 'hidden'
+    },
+
+    navbar: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      zIndex: 1000,
+      background: '#2474CE',
+      transition: 'all 0.3s ease',
+      borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+      padding: 0,
+      ...(isScrolled && {
+        background: '#2474CE',
+        boxShadow: '0 4px 30px rgba(0, 0, 0, 0.3)'
+      })
+    },
+
+    navContainer: {
+      maxWidth: '1400px',
+      margin: '0 auto',
+      padding: isMobile ? '1rem' : '1rem 2rem',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between'
+    },
+
+    logo: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '15px',
+      fontSize: '1.2rem',
+      fontWeight: 700,
+      color: 'white',
+      textDecoration: 'none',
+      letterSpacing: '-0.02em'
+    },
+
+    logoImg: {
+      height: isMobile ? '40px' : '50px',
+      width: 'auto',
+      filter: 'brightness(0) invert(1)'
+    },
+
+    navLinks: {
+      display: 'flex',
+      listStyle: 'none',
+      gap: '3rem',
+      alignItems: 'center',
+      margin: 0,
+      padding: 0,
+      ...(isMobile && {
+        position: 'fixed',
+        top: 0,
+        right: isMenuOpen ? 0 : '-100%',
+        height: '100vh',
+        width: '90%',
+        maxWidth: '350px',
+        background: 'rgba(255, 255, 255, 0.98)',
+        backdropFilter: 'blur(20px)',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        padding: '6rem 2rem 2rem',
+        boxShadow: '-10px 0 40px rgba(0, 0, 0, 0.1)',
+        transition: 'right 0.4s ease'
+      })
+    },
+
+    navLink: {
+      textDecoration: 'none',
+      color: isMobile ? '#1a1a1a' : 'rgba(255, 255, 255, 0.9)',
+      fontWeight: 600,
+      fontSize: isMobile ? '1.2rem' : '1rem',
+      transition: 'all 0.3s ease',
+      position: 'relative',
+      padding: isMobile ? '1rem 0' : '0.5rem 0',
+      ...(isMobile && {
+        width: '100%',
+        borderBottom: '1px solid rgba(0, 0, 0, 0.1)'
+      })
+    },
+
+    navLinkActive: {
+      color: isMobile ? '#2474CE' : 'white'
+    },
+
+    mobileMenuToggle: {
+      display: isMobile ? 'block' : 'none',
+      background: 'none',
+      border: 'none',
+      cursor: 'pointer',
+      color: 'white',
+      padding: '8px'
+    },
+
+    hero: {
+      height: '100vh',
+      position: 'relative',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      textAlign: 'center',
+      color: 'white',
+      overflow: 'hidden'
+    },
+
+    heroBackground: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      background: `linear-gradient(135deg, 
+        rgba(36, 116, 206, 0.95) 0%, 
+        rgba(30, 91, 168, 0.9) 50%,
+        rgba(25, 75, 140, 0.95) 100%),
+        url('https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=1920&h=1080&fit=crop&q=90') center/cover no-repeat`,
+      zIndex: 1
+    },
+
+    heroOverlay: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0, 0, 0, 0.3) 100%)',
+      zIndex: 2
+    },
+
+    heroContent: {
+      position: 'relative',
+      zIndex: 3,
+      maxWidth: '1000px',
+      padding: '2rem'
+    },
+
+    heroTitle: {
+      fontSize: isMobile ? '2.2rem' : '5rem',
+      fontWeight: 800,
+      marginBottom: '1.5rem',
+      lineHeight: 1.1,
+      textShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
+      letterSpacing: '-0.03em'
+    },
+
+    heroSubtitle: {
+      fontSize: isMobile ? '1.2rem' : '1.4rem',
+      marginBottom: '3rem',
+      opacity: 0.95,
+      fontWeight: 400,
+      lineHeight: 1.7,
+      maxWidth: '800px',
+      marginLeft: 'auto',
+      marginRight: 'auto'
+    },
+
+    heroButtons: {
+      display: 'flex',
+      gap: isMobile ? '1rem' : '2rem',
+      justifyContent: 'center',
+      flexWrap: 'wrap',
+      marginBottom: '4rem',
+      ...(isMobile && {
+        flexDirection: 'column',
+        alignItems: 'center'
+      })
+    },
+
+    btn: {
+      padding: '16px 40px',
+      borderRadius: '50px',
+      textDecoration: 'none',
+      fontWeight: 700,
+      fontSize: '0.9rem',
+      transition: 'all 0.4s ease',
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '12px',
+      cursor: 'pointer',
+      border: '2px solid transparent',
+      letterSpacing: '0.02em',
+      textTransform: 'uppercase'
+    },
+
+    btnPrimary: {
+      background: 'linear-gradient(135deg, #2474CE, #1e5ba8)',
+      color: 'white',
+      boxShadow: '0 8px 30px rgba(36, 116, 206, 0.4)'
+    },
+
+    btnPrimaryHover: {
+      transform: 'translateY(-4px)',
+      boxShadow: '0 15px 40px rgba(36, 116, 206, 0.5)',
+      background: 'linear-gradient(135deg, #1e5ba8, #1a4f8a)'
+    },
+
+    btnOutline: {
+      background: 'rgba(255, 255, 255, 0.1)',
+      color: 'white',
+      border: '2px solid rgba(255, 255, 255, 0.4)',
+      backdropFilter: 'blur(10px)'
+    },
+
+    btnOutlineHover: {
+      background: 'white',
+      color: '#2474CE',
+      transform: 'translateY(-4px)',
+      boxShadow: '0 15px 40px rgba(255, 255, 255, 0.3)'
+    },
+
+    heroScroll: {
+      position: 'absolute',
+      bottom: '30px',
+      left: '50%',
+      transform: 'translateX(-50%)',
+      zIndex: 3,
+      color: 'rgba(255, 255, 255, 0.8)',
+      fontSize: '0.9rem'
+    },
+
+    featuresSection: {
+      padding: isMobile ? '4rem 1rem' : '6rem 2rem',
+      background: 'linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%, #f8f9fa 100%)'
+    },
+
+    featuresGrid: {
+      display: 'grid',
+      gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))',
+      gap: isMobile ? '2rem' : '3rem',
+      maxWidth: '1200px',
+      margin: '0 auto'
+    },
+
+    featureCard: {
+      textAlign: 'center',
+      padding: '3rem 2rem',
+      background: 'white',
+      borderRadius: '25px',
+      boxShadow: '0 15px 50px rgba(0, 0, 0, 0.08)',
+      transition: 'all 0.4s ease',
+      border: '1px solid rgba(36, 116, 206, 0.08)'
+    },
+
+    featureCardHover: {
+      transform: 'translateY(-10px)',
+      boxShadow: '0 25px 60px rgba(0, 0, 0, 0.15)'
+    },
+
+    featureIcon: {
+      background: 'linear-gradient(135deg, #2474CE, #4a90e2)',
+      color: 'white',
+      width: '80px',
+      height: '80px',
+      borderRadius: '50%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      margin: '0 auto 2rem',
+      boxShadow: '0 8px 25px rgba(36, 116, 206, 0.3)'
+    },
+
+    featureTitle: {
+      fontSize: '1.5rem',
+      fontWeight: 700,
+      marginBottom: '1rem',
+      color: '#1a1a1a'
+    },
+
+    featureDescription: {
+      color: '#555',
+      lineHeight: 1.7
+    },
+
+    welcomeSection: {
+      padding: isMobile ? '5rem 1rem' : '8rem 2rem',
+      background: 'white'
+    },
+
+    welcomeContent: {
+      display: 'grid',
+      gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+      gap: isMobile ? '3rem' : '6rem',
+      alignItems: 'center',
+      maxWidth: '1400px',
+      margin: '0 auto'
+    },
+
+    welcomeText: {
+      animation: 'slideInLeft 1s ease-out 0.3s both'
+    },
+
+    welcomeTitle: {
+      fontSize: isMobile ? '2.5rem' : '3.5rem',
+      fontWeight: 800,
+      marginBottom: '2rem',
+      color: '#1a1a1a',
+      letterSpacing: '-0.03em',
+      lineHeight: 1.2
+    },
+
+    welcomeLead: {
+      fontSize: '1.3rem',
+      color: '#555',
+      marginBottom: '2rem',
+      lineHeight: 1.7,
+      fontWeight: 500
+    },
+
+    welcomeParagraph: {
+      color: '#555',
+      marginBottom: '2rem',
+      lineHeight: 1.8,
+      fontSize: '1.1rem'
+    },
+
+    pastorCard: {
+      background: 'linear-gradient(135deg, #ffffff, #f8f9fa)',
+      borderRadius: '30px',
+      padding: '3rem',
+      boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
+      position: 'relative',
+      border: '2px solid rgba(36, 116, 206, 0.1)'
+    },
+
+    pastorImage: {
+      width: '160px',
+      height: '160px',
+      borderRadius: '50%',
+      objectFit: 'cover',
+      border: '5px solid #2474CE',
+      boxShadow: '0 10px 30px rgba(36, 116, 206, 0.3)'
+    },
+
+    eventsSection: {
+      padding: isMobile ? '5rem 1rem' : '8rem 2rem',
+      background: 'linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%)'
+    },
+
+    sectionHeader: {
+      textAlign: 'center',
+      marginBottom: '5rem'
+    },
+
+    sectionTitle: {
+      fontSize: isMobile ? '2rem' : '3.5rem',
+      fontWeight: 800,
+      marginBottom: '1.5rem',
+      color: '#1a1a1a',
+      letterSpacing: '-0.03em',
+      position: 'relative'
+    },
+
+    sectionSubtitle: {
+      fontSize: '1.2rem',
+      color: '#555',
+      maxWidth: '700px',
+      margin: '0 auto',
+      lineHeight: 1.8
+    },
+
+    eventsGrid: {
+      display: 'grid',
+      gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(400px, 1fr))',
+      gap: isMobile ? '2rem' : '3rem',
+      maxWidth: '1400px',
+      margin: '0 auto'
+    },
+
+    eventCard: {
+      background: 'white',
+      borderRadius: '25px',
+      overflow: 'hidden',
+      boxShadow: '0 15px 50px rgba(0, 0, 0, 0.08)',
+      transition: 'all 0.5s ease',
+      cursor: 'pointer',
+      border: '1px solid rgba(0, 0, 0, 0.04)'
+    },
+
+    eventCardHover: {
+      transform: 'translateY(-15px) scale(1.02)',
+      boxShadow: '0 30px 70px rgba(0, 0, 0, 0.2)'
+    },
+
+    eventImageContainer: {
+      position: 'relative',
+      height: '250px',
+      overflow: 'hidden'
+    },
+
+    eventImage: {
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+      transition: 'transform 0.5s ease'
+    },
+
+    eventImageHover: {
+      transform: 'scale(1.1)'
+    },
+
+    eventContent: {
+      padding: '2.5rem'
+    },
+
+    contactSection: {
+      padding: isMobile ? '5rem 1rem' : '8rem 2rem',
+      background: 'white'
+    },
+
+    contactGrid: {
+      display: 'grid',
+      gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+      gap: isMobile ? '3rem' : '6rem',
+      maxWidth: '1400px',
+      margin: '0 auto',
+      marginTop: '3rem'
+    },
+
+    contactInfo: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '2.5rem'
+    },
+
+    contactItem: {
+      display: 'flex',
+      alignItems: 'flex-start',
+      gap: '2rem',
+      padding: '2.5rem',
+      background: 'linear-gradient(135deg, #ffffff, #f8f9fa)',
+      borderRadius: '25px',
+      boxShadow: '0 15px 50px rgba(0, 0, 0, 0.08)',
+      transition: 'all 0.4s ease',
+      border: '2px solid rgba(36, 116, 206, 0.08)'
+    },
+
+    contactItemHover: {
+      transform: 'translateY(-8px)',
+      boxShadow: '0 25px 60px rgba(0, 0, 0, 0.15)',
+      borderColor: 'rgba(36, 116, 206, 0.2)'
+    },
+
+    contactIcon: {
+      background: 'linear-gradient(135deg, #2474CE, #1e5ba8)',
+      color: 'white',
+      padding: '18px',
+      borderRadius: '15px',
+      flexShrink: 0,
+      boxShadow: '0 8px 25px rgba(36, 116, 206, 0.3)'
+    },
+
+    mapContainer: {
+      borderRadius: '25px',
+      overflow: 'hidden',
+      boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
+      height: '500px',
+      background: 'linear-gradient(135deg, #f8f9fa, #ffffff)',
+      position: 'relative',
+      border: '2px solid rgba(36, 116, 206, 0.1)'
+    },
+
+    footer: {
+      background: '#2474CE',
+      color: 'white',
+      padding: '5rem 2rem 2rem',
+      textAlign: 'center',
+      position: 'relative',
+      overflow: 'hidden'
+    },
+
+    footerContent: {
+      maxWidth: '1200px',
+      margin: '0 auto',
+      position: 'relative',
+      zIndex: 2
+    },
+
+    footerLogo: {
+      height: '70px',
+      width: 'auto',
+      filter: 'brightness(0) invert(1) drop-shadow(0 2px 10px rgba(0, 0, 0, 0.3))'
+    },
+
+    socialLinks: {
+      display: 'flex',
+      justifyContent: 'center',
+      gap: '1.5rem',
+      marginBottom: '3rem'
+    },
+
+    socialLink: {
+      background: 'rgba(255, 255, 255, 0.15)',
+      color: 'white',
+      padding: '18px',
+      borderRadius: '50%',
+      textDecoration: 'none',
+      transition: 'all 0.4s ease',
+      backdropFilter: 'blur(10px)',
+      border: '2px solid rgba(255, 255, 255, 0.2)',
+      width: '60px',
+      height: '60px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+
+    socialLinkHover: {
+      background: 'white',
+      color: '#2474CE',
+      transform: 'translateY(-5px) scale(1.1)',
+      boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)'
+    }
+  };
+
+  // Animation styles
+  const animationStyles = `
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateX(-50%) translateY(0);
+      }
+      40% {
+        transform: translateX(-50%) translateY(-10px);
+      }
+      60% {
+        transform: translateX(-50%) translateY(-5px);
+      }
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+  `;
 
   const navItems = [
     { name: 'Home', href: '#home', active: true },
@@ -279,19 +873,27 @@ const LandingPage = ({ setCurrentPage }) => {
   ];
 
   return (
-    <div className="landing-page">
-      <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
-        <div className="nav-container">
-          <a href="#home" className="logo">
-            <img src="https://i.postimg.cc/WzGWJQRk/hcbc-removebg-preview.png" alt="HCBC Logo" />
-            <span>Hallett Cove Baptist Church</span>
+    <div style={styles.globalContainer}>
+      <style>{animationStyles}</style>
+
+      <nav style={styles.navbar}>
+        <div style={styles.navContainer}>
+          <a href="#home" style={styles.logo}>
+            <img src="https://i.postimg.cc/WzGWJQRk/hcbc-removebg-preview.png" alt="HCBC Logo" style={styles.logoImg} />
+            {!isMobile && <span>Hallett Cove Baptist Church</span>}
           </a>
-          <ul className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
+          <ul style={styles.navLinks}>
             {navItems.map((item, index) => (
-              <li key={index}>
+              <li key={index} style={{ margin: 0 }}>
                 <a 
                   href={item.href} 
-                  className={`nav-link ${item.active ? 'active' : ''}`}
+                  style={{
+                    ...styles.navLink,
+                    ...(item.active && styles.navLinkActive),
+                    ...(hoveredNavLink === index && !isMobile && { color: 'white' })
+                  }}
+                  onMouseEnter={() => setHoveredNavLink(index)}
+                  onMouseLeave={() => setHoveredNavLink(null)}
                   onClick={(e) => {
                     if (item.onClick) {
                       e.preventDefault();
@@ -301,12 +903,24 @@ const LandingPage = ({ setCurrentPage }) => {
                   }}
                 >
                   {item.name}
+                  {item.active && !isMobile && (
+                    <span style={{
+                      position: 'absolute',
+                      bottom: '-8px',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      width: '6px',
+                      height: '6px',
+                      background: 'white',
+                      borderRadius: '50%'
+                    }}></span>
+                  )}
                 </a>
               </li>
             ))}
           </ul>
           <button 
-            className="mobile-menu-toggle"
+            style={styles.mobileMenuToggle}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? <XIcon /> : <MenuIcon />}
@@ -314,201 +928,346 @@ const LandingPage = ({ setCurrentPage }) => {
         </div>
       </nav>
 
-      <section id="home" className="hero">
-        <div className="hero-background">
-          <div className="hero-overlay"></div>
+      <section id="home" style={styles.hero}>
+        <div style={styles.heroBackground}>
+          <div style={styles.heroOverlay}></div>
         </div>
-        <div className="hero-content">
-          <div className="hero-text">
-            <h1>Welcome Home</h1>
-            <p className="hero-subtitle">
+        <div style={{ ...styles.heroContent, animation: 'fadeInUp 1.2s ease-out' }}>
+          <div>
+            <h1 style={styles.heroTitle}>Welcome Home</h1>
+            <p style={styles.heroSubtitle}>
               Bringing people to Jesus and being transformed into his passionate disciples.
               Join our loving church family at Hallett Cove Baptist Church.
             </p>
           </div>
-          <div className="hero-buttons">
-            <a href="#about" className="btn btn-primary">
+          <div style={styles.heroButtons}>
+            <a 
+              href="#about" 
+              style={{
+                ...styles.btn,
+                ...styles.btnPrimary,
+                ...(hoveredButton === 'primary' && styles.btnPrimaryHover)
+              }}
+              onMouseEnter={() => setHoveredButton('primary')}
+              onMouseLeave={() => setHoveredButton(null)}
+            >
               <PlayIcon />
               Watch Online
             </a>
-            <a href="#events" className="btn btn-outline">
+            <a 
+              href="#events" 
+              style={{
+                ...styles.btn,
+                ...styles.btnOutline,
+                ...(hoveredButton === 'outline' && styles.btnOutlineHover)
+              }}
+              onMouseEnter={() => setHoveredButton('outline')}
+              onMouseLeave={() => setHoveredButton(null)}
+            >
               <CalendarIcon />
               Join Us Sunday
             </a>
           </div>
         </div>
-        <div className="hero-scroll">
+        <div style={{ ...styles.heroScroll, animation: 'bounce 2s infinite' }}>
           <span>Scroll to explore</span>
         </div>
       </section>
 
-      <section className="features-section">
-        <div className="container">
-          <div className="features-grid">
-            {features.map((feature, index) => (
-              <div key={index} className="feature-card">
-                <div className="feature-icon">
-                  {feature.icon}
-                </div>
-                <h3 className="feature-title">{feature.title}</h3>
-                <p className="feature-description">{feature.description}</p>
+      <section style={styles.featuresSection}>
+        <div style={styles.featuresGrid}>
+          {features.map((feature, index) => (
+            <div 
+              key={index} 
+              style={{
+                ...styles.featureCard,
+                ...(hoveredFeature === index && styles.featureCardHover)
+              }}
+              onMouseEnter={() => setHoveredFeature(index)}
+              onMouseLeave={() => setHoveredFeature(null)}
+            >
+              <div style={styles.featureIcon}>
+                {feature.icon}
               </div>
-            ))}
-          </div>
+              <h3 style={styles.featureTitle}>{feature.title}</h3>
+              <p style={styles.featureDescription}>{feature.description}</p>
+            </div>
+          ))}
         </div>
       </section>
 
-      <section id="about" className="welcome-section">
-        <div className="container">
-          <div className="welcome-content">
-            <div className="welcome-text">
-              <h2>One Church, One Mission</h2>
-              <p className="lead">
-                At Hallett Cove Baptist Church, we believe that God has called us to be a beacon of hope 
-                in our community. We're passionate about creating an environment where people can encounter 
-                the love of Jesus Christ and grow in their faith journey.
-              </p>
-              <p>
-                Our heart is to welcome everyone - regardless of where you are in life - and help you 
-                discover the incredible plan God has for you. We're more than just a church; we're a 
-                family committed to loving God and loving people.
-              </p>
-              <a href="#contact" className="btn btn-primary">Visit Us This Sunday</a>
-            </div>
-            <div className="pastor-section">
-              <div className="pastor-card">
-                <div className="pastor-image-container">
-                  <img 
-                    src="https://i.postimg.cc/5NGYCj38/image0-scaled-1-150x150.jpg" 
-                    alt="Pastor David Chambers" 
-                    className="pastor-image"
-                  />
-                </div>
-                <div className="pastor-info">
-                  <h3 className="pastor-name">Pastor David Chambers</h3>
-                  <p className="pastor-title">Senior Pastor</p>
-                  <p className="pastor-bio">
-                    Pastor David has been faithfully serving our community for over 15 years. His heart 
-                    for teaching God's Word and caring for people has helped shape HCBC into the loving 
-                    church family it is today.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="events" className="events-section">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Join Us This Week</h2>
-            <p className="section-subtitle">
-              We have something for everyone! Come and be part of our church community 
-              through worship, study, fellowship, and service.
+      <section id="about" style={styles.welcomeSection}>
+        <div style={styles.welcomeContent}>
+          <div style={styles.welcomeText}>
+            <h2 style={styles.welcomeTitle}>One Church, One Mission</h2>
+            <p style={styles.welcomeLead}>
+              At Hallett Cove Baptist Church, we believe that God has called us to be a beacon of hope 
+              in our community. We're passionate about creating an environment where people can encounter 
+              the love of Jesus Christ and grow in their faith journey.
             </p>
+            <p style={styles.welcomeParagraph}>
+              Our heart is to welcome everyone - regardless of where you are in life - and help you 
+              discover the incredible plan God has for you. We're more than just a church; we're a 
+              family committed to loving God and loving people.
+            </p>
+            <a 
+              href="#contact" 
+              style={{
+                ...styles.btn,
+                ...styles.btnPrimary,
+                ...(hoveredButton === 'visit' && styles.btnPrimaryHover)
+              }}
+              onMouseEnter={() => setHoveredButton('visit')}
+              onMouseLeave={() => setHoveredButton(null)}
+            >
+              Visit Us This Sunday
+            </a>
           </div>
-          <div className="events-grid">
-            {events.map((event, index) => (
-              <div 
-                key={index} 
-                className="event-card"
-                onClick={() => setSelectedEvent(event)}
-                style={{ cursor: 'pointer' }}
-              >
-                <div className="event-image-container">
-                  <img src={event.image} alt={event.title} className="event-image" />
-                  <div className="event-overlay">
-                    <span className="event-category">{event.category}</span>
-                  </div>
-                </div>
-                <div className="event-content">
-                  <h3 className="event-title">{event.title}</h3>
-                  <div className="event-time">
-                    <ClockIcon />
-                    <span>{event.date} at {event.time}</span>
-                  </div>
-                  <p className="event-description">{event.description}</p>
+          <div style={{ animation: 'slideInRight 1s ease-out 0.6s both' }}>
+            <div style={styles.pastorCard}>
+              <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                <img 
+                  src="https://i.postimg.cc/5NGYCj38/image0-scaled-1-150x150.jpg" 
+                  alt="Pastor David Chambers" 
+                  style={styles.pastorImage}
+                />
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <h3 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '0.5rem', color: '#1a1a1a' }}>
+                  Pastor David Chambers
+                </h3>
+                <p style={{ color: '#2474CE', fontWeight: 600, fontSize: '1.1rem', marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  Senior Pastor
+                </p>
+                <p style={{ color: '#555', lineHeight: 1.8, fontSize: '1rem' }}>
+                  Pastor David has been faithfully serving our community for over 15 years. His heart 
+                  for teaching God's Word and caring for people has helped shape HCBC into the loving 
+                  church family it is today.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="events" style={styles.eventsSection}>
+        <div style={styles.sectionHeader}>
+          <h2 style={styles.sectionTitle}>
+            Join Us This Week
+            <span style={{
+              position: 'absolute',
+              bottom: '-15px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '80px',
+              height: '5px',
+              background: 'linear-gradient(90deg, #2474CE, #4a90e2)',
+              borderRadius: '3px'
+            }}></span>
+          </h2>
+          <p style={styles.sectionSubtitle}>
+            We have something for everyone! Come and be part of our church community 
+            through worship, study, fellowship, and service.
+          </p>
+        </div>
+        <div style={styles.eventsGrid}>
+          {events.map((event, index) => (
+            <div 
+              key={index} 
+              style={{
+                ...styles.eventCard,
+                ...(hoveredCard === index && styles.eventCardHover)
+              }}
+              onMouseEnter={() => setHoveredCard(index)}
+              onMouseLeave={() => setHoveredCard(null)}
+              onClick={() => setSelectedEvent(event)}
+            >
+              <div style={styles.eventImageContainer}>
+                <img 
+                  src={event.image} 
+                  alt={event.title} 
+                  style={{
+                    ...styles.eventImage,
+                    ...(hoveredCard === index && styles.eventImageHover)
+                  }}
+                />
+                <div style={{
+                  position: 'absolute',
+                  top: '20px',
+                  left: '20px',
+                  zIndex: 2
+                }}>
+                  <span style={{
+                    background: 'linear-gradient(135deg, #2474CE, #1e5ba8)',
+                    color: 'white',
+                    padding: '8px 20px',
+                    borderRadius: '30px',
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '1px',
+                    boxShadow: '0 6px 20px rgba(36, 116, 206, 0.4)'
+                  }}>
+                    {event.category}
+                  </span>
                 </div>
               </div>
-            ))}
-          </div>
+              <div style={styles.eventContent}>
+                <h3 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '1rem', color: '#1a1a1a', lineHeight: 1.3 }}>
+                  {event.title}
+                </h3>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '1.5rem', color: '#888', fontWeight: 600 }}>
+                  <ClockIcon />
+                  <span>{event.date} at {event.time}</span>
+                </div>
+                <p style={{ color: '#555', lineHeight: 1.8, fontSize: '1rem' }}>
+                  {event.description}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
       {selectedEvent && <EventModal event={selectedEvent} onClose={() => setSelectedEvent(null)} />}
 
-      <section id="contact" className="contact-section">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title">Visit Us</h2>
-            <p className="section-subtitle">
-              We'd love to meet you! Here's how you can connect with us and find our church home.
-            </p>
+      <section id="contact" style={styles.contactSection}>
+        <div style={styles.sectionHeader}>
+          <h2 style={styles.sectionTitle}>
+            Visit Us
+            <span style={{
+              position: 'absolute',
+              bottom: '-15px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: '80px',
+              height: '5px',
+              background: 'linear-gradient(90deg, #2474CE, #4a90e2)',
+              borderRadius: '3px'
+            }}></span>
+          </h2>
+          <p style={styles.sectionSubtitle}>
+            We'd love to meet you! Here's how you can connect with us and find our church home.
+          </p>
+        </div>
+        <div style={styles.contactGrid}>
+          <div style={styles.contactInfo}>
+            <div 
+              style={{
+                ...styles.contactItem,
+                ...(hoveredCard === 'contact1' && styles.contactItemHover)
+              }}
+              onMouseEnter={() => setHoveredCard('contact1')}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              <div style={styles.contactIcon}>
+                <MapPinIcon />
+              </div>
+              <div>
+                <h3 style={{ fontSize: '1.3rem', fontWeight: 700, marginBottom: '0.5rem', color: '#1a1a1a' }}>
+                  Our Location
+                </h3>
+                <p style={{ color: '#555', lineHeight: 1.7, fontSize: '1.1rem' }}>
+                  1 Ramrod Ave<br />Hallett Cove SA 5158
+                </p>
+              </div>
+            </div>
+            <div 
+              style={{
+                ...styles.contactItem,
+                ...(hoveredCard === 'contact2' && styles.contactItemHover)
+              }}
+              onMouseEnter={() => setHoveredCard('contact2')}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              <div style={styles.contactIcon}>
+                <PhoneIcon />
+              </div>
+              <div>
+                <h3 style={{ fontSize: '1.3rem', fontWeight: 700, marginBottom: '0.5rem', color: '#1a1a1a' }}>
+                  Call Us
+                </h3>
+                <a href="tel:0406295962" style={{ color: '#555', textDecoration: 'none', lineHeight: 1.7, fontSize: '1.1rem' }}>
+                  0406 295 962
+                </a>
+              </div>
+            </div>
+            <div 
+              style={{
+                ...styles.contactItem,
+                ...(hoveredCard === 'contact3' && styles.contactItemHover)
+              }}
+              onMouseEnter={() => setHoveredCard('contact3')}
+              onMouseLeave={() => setHoveredCard(null)}
+            >
+              <div style={styles.contactIcon}>
+                <MailIcon />
+              </div>
+              <div>
+                <h3 style={{ fontSize: '1.3rem', fontWeight: 700, marginBottom: '0.5rem', color: '#1a1a1a' }}>
+                  Email Us
+                </h3>
+                <a href="mailto:hcbcc.office@gmail.com" style={{ color: '#555', textDecoration: 'none', lineHeight: 1.7, fontSize: '1.1rem' }}>
+                  hcbcc.office@gmail.com
+                </a>
+              </div>
+            </div>
           </div>
-          <div className="contact-grid">
-            <div className="contact-info">
-              <div className="contact-item">
-                <div className="contact-icon">
-                  <MapPinIcon />
-                </div>
-                <div className="contact-details">
-                  <h3>Our Location</h3>
-                  <p>1 Ramrod Ave<br />Hallett Cove SA 5158</p>
-                </div>
-              </div>
-              <div className="contact-item">
-                <div className="contact-icon">
-                  <PhoneIcon />
-                </div>
-                <div className="contact-details">
-                  <h3>Call Us</h3>
-                  <a href="tel:0406295962">0406 295 962</a>
-                </div>
-              </div>
-              <div className="contact-item">
-                <div className="contact-icon">
-                  <MailIcon />
-                </div>
-                <div className="contact-details">
-                  <h3>Email Us</h3>
-                  <a href="mailto:hcbcc.office@gmail.com">hcbcc.office@gmail.com</a>
-                </div>
-              </div>
-            </div>
-            <div className="map-container">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3265.207598909098!2d138.5158954119569!3d-35.07654537267501!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ab0d8f7e3a7199d%3A0xbb55ae1be62b6c46!2s1%20Ramrod%20Ave%2C%20Hallett%20Cove%20SA%205158!5e0!3m2!1sen!2sau!4v1757777136309!5m2!1sen!2sau" 
-                width="100%" 
-                height="600" 
-                style={{border: 0, borderRadius: '25px'}} 
-                allowFullScreen="" 
-                loading="lazy" 
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Hallett Cove Baptist Church Location"
-              />
-            </div>
+          <div style={styles.mapContainer}>
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3265.207598909098!2d138.5158954119569!3d-35.07654537267501!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ab0d8f7e3a7199d%3A0xbb55ae1be62b6c46!2s1%20Ramrod%20Ave%2C%20Hallett%20Cove%20SA%205158!5e0!3m2!1sen!2sau!4v1757777136309!5m2!1sen!2sau" 
+              width="100%" 
+              height="500" 
+              style={{ border: 0, borderRadius: '25px' }} 
+              allowFullScreen="" 
+              loading="lazy" 
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Hallett Cove Baptist Church Location"
+            />
           </div>
         </div>
       </section>
 
-      <footer className="footer">
-        <div className="footer-content">
-          <div className="footer-top">
-            <div className="footer-logo">
-              <img src="https://i.postimg.cc/WzGWJQRk/hcbc-removebg-preview.png" alt="HCBC Logo" />
+      <footer style={styles.footer}>
+        <div style={styles.footerContent}>
+          <div style={{ marginBottom: '3rem' }}>
+            <div style={{ marginBottom: '2rem' }}>
+              <img src="https://i.postimg.cc/WzGWJQRk/hcbc-removebg-preview.png" alt="HCBC Logo" style={styles.footerLogo} />
             </div>
-            <p className="footer-description">
+            <p style={{
+              marginBottom: '3rem',
+              opacity: 0.9,
+              maxWidth: '600px',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+              fontSize: '1.1rem',
+              lineHeight: 1.8
+            }}>
               Hallett Cove Baptist Church - Bringing people to Jesus and being transformed 
               into His passionate disciples. Join our loving church family.
             </p>
-            <div className="social-links">
-              <a href="https://www.facebook.com/hallettcovebaptist/" className="social-link" target="_blank" rel="noopener noreferrer">
+            <div style={styles.socialLinks}>
+              <a 
+                href="https://www.facebook.com/hallettcovebaptist/" 
+                style={{
+                  ...styles.socialLink,
+                  ...(hoveredSocialLink === 'facebook' && styles.socialLinkHover)
+                }}
+                onMouseEnter={() => setHoveredSocialLink('facebook')}
+                onMouseLeave={() => setHoveredSocialLink(null)}
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
                 <FacebookIcon />
               </a>
             </div>
           </div>
-          <div className="footer-bottom">
+          <div style={{
+            borderTop: '1px solid rgba(255, 255, 255, 0.2)',
+            paddingTop: '2rem',
+            opacity: 0.8,
+            fontSize: '1rem'
+          }}>
             <p>&copy; 2025 Hallett Cove Baptist Church. All rights reserved.</p>
           </div>
         </div>
