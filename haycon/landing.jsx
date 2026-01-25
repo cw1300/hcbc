@@ -941,8 +941,8 @@ const LandingPage = ({ setCurrentPage }) => {
     },
     {
       title: 'Op Shop',
-      time: '9:00 AM - 2:00 PM',
-      date: 'Thursdays & Saturdays',
+      time: '9:30 AM - 12:30 PM',
+      date: 'Tuesday & Wednesday',
       image: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=800&h=600&fit=crop&q=90',
       category: 'Community',
       description: 'Quality second-hand goods at great prices while supporting our community outreach programs.',
