@@ -1,6 +1,6 @@
-const { useState, useEffect } = React;
+var { useState, useEffect } = React;
 
-const App = () => {
+var App = () => {
   const [currentPage, setCurrentPage] = useState('home');
 
   // Scroll to top whenever page changes

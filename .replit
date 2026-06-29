@@ -79,3 +79,6 @@ externalPort = 80
 
 [agent]
 expertMode = true
+
+[env]
+PATH = "/home/runner/.local/bin:${PATH}"

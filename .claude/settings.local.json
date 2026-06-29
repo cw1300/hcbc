@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s \"https://unpkg.com/@babel/standalone/package.json\")",
+      "Bash(curl -sL \"https://unpkg.com/@babel/standalone/package.json\")",
+      "Bash(curl -sIL \"https://unpkg.com/@babel/standalone/babel.min.js\")",
+      "Bash(curl -sIL \"https://unpkg.com/@babel/standalone@7/babel.min.js\")",
+      "Bash(curl -sIL \"https://unpkg.com/react@18/umd/react.development.js\")",
+      "Bash(node *)"
+    ]
+  }
+}

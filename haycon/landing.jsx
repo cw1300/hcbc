@@ -1,7 +1,7 @@
-const { useState, useEffect } = React;
+var { useState, useEffect } = React;
 
 // Icon Components
-const MenuIcon = () => (
+var MenuIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <line x1="3" y1="6" x2="21" y2="6"></line>
     <line x1="3" y1="12" x2="21" y2="12"></line>
@@ -9,20 +9,20 @@ const MenuIcon = () => (
   </svg>
 );
 
-const XIcon = () => (
+var XIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <line x1="18" y1="6" x2="6" y2="18"></line>
     <line x1="6" y1="6" x2="18" y2="18"></line>
   </svg>
 );
 
-const PlayIcon = () => (
+var PlayIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <polygon points="5,3 19,12 5,21"></polygon>
   </svg>
 );
 
-const CalendarIcon = () => (
+var CalendarIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
     <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -31,46 +31,46 @@ const CalendarIcon = () => (
   </svg>
 );
 
-const MapPinIcon = () => (
+var MapPinIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
     <circle cx="12" cy="10" r="3"></circle>
   </svg>
 );
 
-const PhoneIcon = () => (
+var PhoneIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
   </svg>
 );
 
-const MailIcon = () => (
+var MailIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
     <polyline points="22,6 12,13 2,6"></polyline>
   </svg>
 );
 
-const FacebookIcon = () => (
+var FacebookIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
     <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
   </svg>
 );
 
-const ClockIcon = () => (
+var ClockIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <circle cx="12" cy="12" r="10"></circle>
     <polyline points="12,6 12,12 16,14"></polyline>
   </svg>
 );
 
-const HeartIcon = () => (
+var HeartIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
   </svg>
 );
 
-const UsersIcon = () => (
+var UsersIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
     <circle cx="9" cy="7" r="4"></circle>
@@ -79,14 +79,14 @@ const UsersIcon = () => (
   </svg>
 );
 
-const BookOpenIcon = () => (
+var BookOpenIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
     <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
   </svg>
 );
 
-const ShoppingBagIcon = () => (
+var ShoppingBagIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
     <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -94,7 +94,7 @@ const ShoppingBagIcon = () => (
   </svg>
 );
 
-const BabyIcon = () => (
+var BabyIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M9 12h.01"></path>
     <path d="M15 12h.01"></path>
@@ -104,27 +104,27 @@ const BabyIcon = () => (
 );
 
 // Mobile Nav Icons
-const HomeIcon = () => (
+var HomeIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
     <polyline points="9 22 9 12 15 12 15 22"></polyline>
   </svg>
 );
 
-const CrossIcon = () => (
+var CrossIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M12 2v20M4 12h16"></path>
   </svg>
 );
 
-const VideoIcon = () => (
+var VideoIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <polygon points="23 7 16 12 23 17 23 7"></polygon>
     <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
   </svg>
 );
 
-const DocumentIcon = () => (
+var DocumentIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
     <polyline points="14 2 14 8 20 8"></polyline>
@@ -134,7 +134,7 @@ const DocumentIcon = () => (
   </svg>
 );
 
-const EventModal = ({ event, onClose }) => {
+var EventModal = ({ event, onClose }) => {
   const [language, setLanguage] = useState('en');
 
   if (!event) return null;
@@ -226,7 +226,7 @@ const EventModal = ({ event, onClose }) => {
   );
 };
 
-const LandingPage = ({ setCurrentPage }) => {
+var LandingPage = ({ setCurrentPage }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
