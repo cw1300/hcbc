@@ -4,22 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hallett Cove Baptist Church</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
+    <meta name="description" content="Hallett Cove Baptist Church - bringing people to Jesus and being transformed into His passionate disciples. Join us Sundays at 10:00 AM, 1 Ramrod Ave, Hallett Cove SA.">
+    <meta name="theme-color" content="#2474CE">
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/WzGWJQRk/hcbc-removebg-preview.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+    <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone@7.29.9/babel.min.js"></script>
 </head>
 <body>
     <div id="root"></div>
+    <noscript>Please enable JavaScript to view the Hallett Cove Baptist Church website.</noscript>
+
+    <!-- shared.jsx must load first: it defines the icons, nav and footer used by every page -->
+    <script type="text/babel" data-presets="react" src="shared.jsx"></script>
     <script type="text/babel" data-presets="react" src="landing.jsx"></script>
     <script type="text/babel" data-presets="react" src="sermons.jsx"></script>
     <script type="text/babel" data-presets="react" src="about-jesus.jsx"></script>
     <script type="text/babel" data-presets="react" src="contact.jsx"></script>
     <script type="text/babel" data-presets="react" src="newsletter.jsx"></script>
     <script type="text/babel" data-presets="react" src="app.js"></script>
-    
 </body>
 </html>
