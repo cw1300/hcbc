@@ -1,10 +1,9 @@
 var CHURCH_EMAIL = 'hcbcc.office@gmail.com';
 
-// Formspree form that delivers website messages to CHURCH_EMAIL.
-// Paste the form ID from https://formspree.io/forms here - it's the part after
-// "/f/" in the form's endpoint, e.g. 'xyzabcde'. While this is empty the form
-// falls back to opening the visitor's email app instead.
-var FORMSPREE_FORM_ID = '';
+// FormSubmit (formsubmit.co) emails each message straight to CHURCH_EMAIL - no account needed.
+// The very first message sends an "Activate Form" email to that inbox; click it once and
+// every message after that is delivered.
+var CONTACT_FORM_ENDPOINT = `https://formsubmit.co/ajax/${CHURCH_EMAIL}`;
 
 var Contact = ({ setCurrentPage }) => {
   const [formData, setFormData] = useState({
@@ -27,14 +26,6 @@ var Contact = ({ setCurrentPage }) => {
     }));
   };
 
-  const openEmailApp = (subject) => {
-    const bodyLines = [`Name: ${formData.name}`, `Email: ${formData.email}`];
-    if (formData.phone) bodyLines.push(`Phone: ${formData.phone}`);
-    bodyLines.push('', formData.message);
-
-    window.location.href = `mailto:${CHURCH_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join('\n'))}`;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formStatus === 'sending') return;
@@ -46,37 +37,39 @@ var Contact = ({ setCurrentPage }) => {
       return;
     }
 
-    const subject = `Website enquiry from ${formData.name}`;
-
-    if (!FORMSPREE_FORM_ID) {
-      openEmailApp(subject);
-      setFormStatus('mailto');
-      setTimeout(() => setFormStatus(''), 8000);
-      return;
-    }
-
-    // Send through Formspree, which emails the message to the church office.
-    // "email" becomes the reply-to address, "_gotcha" is a hidden spam trap.
-    const payload = new FormData();
-    payload.append('name', formData.name);
-    payload.append('email', formData.email);
-    payload.append('phone', formData.phone);
-    payload.append('message', formData.message);
-    payload.append('_subject', subject);
-    payload.append('_gotcha', e.target.elements._gotcha.value);
-
-    setFormStatus('sending');
-    try {
-      const response = await fetch(`https://formspree.io/f/${FORMSPREE_FORM_ID}`, {
-        method: 'POST',
-        body: payload,
-        headers: { Accept: 'application/json' }
-      });
-      if (!response.ok) throw new Error(`Formspree responded with ${response.status}`);
-
+    const showSuccess = () => {
       setFormStatus('success');
       setFormData({ name: '', email: '', phone: '', message: '' });
       setTimeout(() => setFormStatus(''), 5000);
+    };
+
+    // Hidden spam trap: only bots fill it in, so quietly drop their message
+    if (e.target.elements.website.value) {
+      showSuccess();
+      return;
+    }
+
+    setFormStatus('sending');
+    try {
+      const response = await fetch(CONTACT_FORM_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone || 'Not provided',
+          message: formData.message,
+          _subject: `Website enquiry from ${formData.name}`,
+          _replyto: formData.email,
+          _template: 'table'
+        })
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || String(result.success) !== 'true') {
+        throw new Error(result.message || `FormSubmit responded with ${response.status}`);
+      }
+
+      showSuccess();
     } catch (err) {
       console.error('Contact form failed to send:', err);
       setFormStatus('failed');
@@ -625,7 +618,7 @@ var Contact = ({ setCurrentPage }) => {
                 {/* Hidden spam trap - real visitors never fill this in */}
                 <input
                   type="text"
-                  name="_gotcha"
+                  name="website"
                   tabIndex="-1"
                   autoComplete="off"
                   aria-hidden="true"
@@ -635,13 +628,6 @@ var Contact = ({ setCurrentPage }) => {
                 {formStatus === 'success' && (
                   <div style={{ ...styles.formMessage, ...styles.formMessageSuccess }}>
                     Thank you for your message! We'll get back to you soon.
-                  </div>
-                )}
-
-                {formStatus === 'mailto' && (
-                  <div style={{ ...styles.formMessage, ...styles.formMessageSuccess }}>
-                    Your email app should now open with your message ready to send.
-                    If it doesn't, please email us at {CHURCH_EMAIL}.
                   </div>
                 )}
 
