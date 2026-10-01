@@ -1,9 +1,13 @@
 var CHURCH_EMAIL = 'hcbcc.office@gmail.com';
 
-// FormSubmit (formsubmit.co) emails each message straight to CHURCH_EMAIL - no account needed.
-// The very first message sends an "Activate Form" email to that inbox; click it once and
-// every message after that is delivered.
-var CONTACT_FORM_ENDPOINT = `https://formsubmit.co/ajax/${CHURCH_EMAIL}`;
+// EmailJS (emailjs.com) sends contact form messages from the Gmail account connected
+// in the EmailJS dashboard to the "To Email" set on the template (the church office).
+// Fill these in from the dashboard: Email Services -> Service ID,
+// Email Templates -> Template ID, Account -> Public Key.
+// While any are blank the form opens the visitor's email app instead.
+var EMAILJS_SERVICE_ID = '';
+var EMAILJS_TEMPLATE_ID = '';
+var EMAILJS_PUBLIC_KEY = '';
 
 var Contact = ({ setCurrentPage }) => {
   const [formData, setFormData] = useState({
@@ -49,24 +53,33 @@ var Contact = ({ setCurrentPage }) => {
       return;
     }
 
+    if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
+      const body = [`Name: ${formData.name}`, `Email: ${formData.email}`, `Phone: ${formData.phone || 'Not provided'}`, '', formData.message].join('\n');
+      window.location.href = `mailto:${CHURCH_EMAIL}?subject=${encodeURIComponent(`Website enquiry from ${formData.name}`)}&body=${encodeURIComponent(body)}`;
+      setFormStatus('mailto');
+      setTimeout(() => setFormStatus(''), 8000);
+      return;
+    }
+
     setFormStatus('sending');
     try {
-      const response = await fetch(CONTACT_FORM_ENDPOINT, {
+      const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone || 'Not provided',
-          message: formData.message,
-          _subject: `Website enquiry from ${formData.name}`,
-          _replyto: formData.email,
-          _template: 'table'
+          service_id: EMAILJS_SERVICE_ID,
+          template_id: EMAILJS_TEMPLATE_ID,
+          user_id: EMAILJS_PUBLIC_KEY,
+          template_params: {
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone || 'Not provided',
+            message: formData.message
+          }
         })
       });
-      const result = await response.json().catch(() => ({}));
-      if (!response.ok || String(result.success) !== 'true') {
-        throw new Error(result.message || `FormSubmit responded with ${response.status}`);
+      if (!response.ok) {
+        throw new Error(`EmailJS responded with ${response.status}: ${await response.text()}`);
       }
 
       showSuccess();
@@ -628,6 +641,13 @@ var Contact = ({ setCurrentPage }) => {
                 {formStatus === 'success' && (
                   <div style={{ ...styles.formMessage, ...styles.formMessageSuccess }}>
                     Thank you for your message! We'll get back to you soon.
+                  </div>
+                )}
+
+                {formStatus === 'mailto' && (
+                  <div style={{ ...styles.formMessage, ...styles.formMessageSuccess }}>
+                    Your email app should now open with your message ready to send.
+                    If it doesn't, please email us at {CHURCH_EMAIL}.
                   </div>
                 )}
 
